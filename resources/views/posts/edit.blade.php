@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>投稿詳細</title>
+    <title>投稿編集</title>
 </head>
 
 <body>
@@ -25,27 +25,31 @@
     </header>
 
     <main>
-        <h1>投稿詳細</h1>
+        <h1>投稿編集</h1>
 
-        @if (session('flash_message'))
-            <p>{{ session('flash_message') }}</p>
+        @if ($errors->any())
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         @endif
 
         <a href="{{ route('posts.index') }}">&lt; 戻る</a>
 
-        <article>
-            <h2>{{ $post->title }}</h2>
-            <p>{{ $post->content }}</p>
-        </article>
-
-        @if ($post->user_id === Auth::id())
-            <a href="{{ route('posts.edit', $post) }}">編集</a>
-            <form action="{{ route('posts.destroy', $post) }}"
-                method="post"onsubmit="return confirm('本当に削除してもよろしいですか？');"></form>
+        <form action="{{ route('posts.update', $post) }}" method="POST">
             @csrf
-            @method('DELETE')
-            <button type="submit">削除</button>
-        @endif
+            @method('PATCH')
+            <div>
+                <label for="title">タイトル</label>
+                <input type="text" name="title" id="title" value="{{ old('title', $post->title) }}">
+            </div>
+            <div>
+                <label for="content">本文</label>
+                <textarea name="content" id="content">{{ old('content', $post->content) }}</textarea>
+            </div>
+            <button type="submit">更新</button>
+        </form>
 
     </main>
 
