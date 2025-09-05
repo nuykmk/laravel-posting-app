@@ -1,62 +1,33 @@
-<!DOCTYPE html>
-<html lang="ja">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>新規投稿</title>
-</head>
+@section('title', '新規投稿')
 
-<body>
-    <header>
-        <nav>
-            <a href="{{ route('posts.index') }}">投稿アプリ</a>
+@section('content')
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
             <ul>
-                <li>
-                    <a href="{{ route('logout') }}"
-                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">ログアウト</a>
-                    <form action="{{ route('logout') }}" id="logout-form" method="POST">
-                        @csrf
-                    </form>
-                </li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <h1>新規投稿</h1>
-
-
-        @if ($errors->any())
-            <ul>
-                @foreach ($errors as $error)
+                @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-        @endif
+        </div>
+    @endif
 
-        <a href="{{ route('posts.index') }}">&lt; 戻る</a>
+    <div class="mb-2">
+        <a class="text-decoration-none" href="{{ route('posts.index') }}">&lt; 戻る</a>
+    </div>
 
-        <form action="{{ route('posts.store') }}" method="post">
-            @csrf
-            <div>
-                <label for="title">タイトル</label>
-                <input type="text" name="title" id="title" value="{{ old('title') }}">
-            </div>
-            <div>
-                <label for="content">本文</label>
-                <textarea name="content" id="content">{{ old('content') }}</textarea>
-            </div>
-            <button type="submit">投稿</button>
-        </form>
-
-    </main>
-
-    <footer>
-        <p>&copy;投稿アプリ All rights reserved.</p>
-    </footer>
-
-</body>
-
-</html>
+    <form action="{{ route('posts.store') }}" method="post">
+        @csrf
+        <div class="form-group mb-3">
+            <label for="title">タイトル</label>
+            <input class="form-control" type="text" name="title" id="title" value="{{ old('title') }}">
+        </div>
+        <div class="form-group mb-3">
+            <label for="content">本文</label>
+            <textarea class="form-control" name="content" id="content">{{ old('content') }}</textarea>
+        </div>
+        <button class="btn btn-outline-primary" type="submit">投稿</button>
+    </form>
+@endsection

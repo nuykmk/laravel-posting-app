@@ -1,58 +1,36 @@
-<!DOCTYPE html>
-<html lang="ja">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>投稿詳細</title>
-</head>
+@section('title', '投稿詳細')
 
-<body>
-    <header>
-        <nav>
-            <a href="{{ route('posts.index') }}">投稿アプリ</a>
-            <ul>
-                <li>
-                    <a href="{{ route('logout') }}"
-                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">ログアウト</a>
-                    <form action="{{ route('logout') }}" id="logout-form" method="POST">
-                        @csrf
-                    </form>
-                </li>
-            </ul>
-        </nav>
-    </header>
+@section('content')
 
-    <main>
-        <h1>投稿詳細</h1>
+    @if (session('flash_message'))
+        <p class="text-success">{{ session('flash_message') }}</p>
+    @endif
 
-        @if (session('flash_message'))
-            <p>{{ session('flash_message') }}</p>
-        @endif
+    <div class="mb-2">
+        <a class="text-decoration-none" href="{{ route('posts.index') }}">&lt; 戻る</a>
+    </div>
 
-        <a href="{{ route('posts.index') }}">&lt; 戻る</a>
+    <article>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h2 class="card-title fs-5">{{ $post->title }}</h2>
+                <p class="card-text">{{ $post->content }}</p>
+                <p class="card-text">{{ $post->updated_at }}</p>
 
-        <article>
-            <h2>{{ $post->title }}</h2>
-            <p>{{ $post->content }}</p>
-        </article>
-
-        @if ($post->user_id === Auth::id())
-            <a href="{{ route('posts.edit', $post) }}">編集</a>
-            <form action="{{ route('posts.destroy', $post) }}"
-                method="post"onsubmit="return confirm('本当に削除してもよろしいですか？');"></form>
-            @csrf
-            @method('DELETE')
-            <button type="submit">削除</button>
-        @endif
-
-    </main>
-
-    <footer>
-        <p>&copy;投稿アプリ All rights reserved.</p>
-    </footer>
-
-</body>
-
-</html>
+                @if ($post->user_id === Auth::id())
+                    <div class="d-flex">
+                        <a class="btn btn-outline-primary d-block me-1" href="{{ route('posts.edit', $post) }}">編集</a>
+                        <form action="{{ route('posts.destroy', $post) }}"
+                            method="post"onsubmit="return confirm('本当に削除してもよろしいですか？');">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-outline-danger" type="submit">削除</button>
+                        </form>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </article>
+@endsection
